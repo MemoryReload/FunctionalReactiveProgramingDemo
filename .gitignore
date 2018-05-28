@@ -1,3 +1,7 @@
+!.gitignore
 .*
 Build
 Index
+Pods
+Podfile.lock
+*.xcworkspace
