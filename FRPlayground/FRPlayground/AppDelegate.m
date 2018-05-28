@@ -7,6 +7,7 @@
 //
 
 #import "AppDelegate.h"
+#import <RXCollections/RXCollection.h>
 
 @interface AppDelegate ()
 
@@ -17,6 +18,11 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
+    NSArray* array = @[@(1), @(2), @(3)];
+    NSArray* powArray = [array rx_mapWithBlock:^id(id each) {
+        return @(pow([(NSNumber*)each integerValue], 2));
+    }];
+    NSLog(@"pow array: %@",powArray);
     return YES;
 }
 
