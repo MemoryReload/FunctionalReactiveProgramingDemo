@@ -23,6 +23,13 @@
         return @(pow([(NSNumber*)each integerValue], 2));
     }];
     NSLog(@"pow array: %@",powArray);
+    
+    NSArray* evenArray = [array rx_filterWithBlock:^BOOL(id each) {
+        return [(NSNumber*)each integerValue] % 2 == 0;
+    }];
+    NSLog(@"even array: %@",evenArray);
+    
+    
     return YES;
 }
 
