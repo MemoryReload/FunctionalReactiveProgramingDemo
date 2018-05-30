@@ -18,7 +18,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
-    NSArray* array = @[@(1), @(2), @(3)];
+    NSArray* array = @[@(1), @(2), @(3), @(4), @(5), @(6)];
     NSArray* powArray = [array rx_mapWithBlock:^id(id each) {
         return @(pow([(NSNumber*)each integerValue], 2));
     }];
@@ -29,7 +29,17 @@
     }];
     NSLog(@"even array: %@",evenArray);
     
+    NSNumber* sum = [array rx_foldWithBlock:^id(id memo, id each) {
+        return @([(NSNumber*)memo integerValue] + [(NSNumber*)each integerValue]);
+    }];
+    NSLog(@"sum = %@",sum);
     
+    NSString* str = [[array rx_mapWithBlock:^id(id each) {
+        return [each stringValue];
+    }] rx_foldInitialValue:@"" block:^id(id memo, id each) {
+        return [memo stringByAppendingString:each];
+    }];
+    NSLog(@"fold string: %@",str);
     return YES;
 }
 
