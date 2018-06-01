@@ -10,7 +10,8 @@
 #import <ReactiveObjC/ReactiveObjC.h>
 
 @interface ViewController ()
-
+@property (strong, nonatomic) IBOutlet UITextField *accountField;
+@property (strong, nonatomic) IBOutlet UIButton *createBtn;
 @end
 
 @implementation ViewController
@@ -18,29 +19,31 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
-    NSArray* array = @[@(1), @(2), @(3), @(4), @(5), @(6)];
-    RACSequence* sequence = [array rac_sequence];
-    [sequence map:^id _Nullable(id  _Nullable value) {
-        return @(pow([(NSNumber*)value integerValue], 2));
+    [[self.accountField rac_textSignal] subscribeNext:^(NSString * _Nullable x) {
+        NSLog(@"Current account text is: %@",x);
     }];
-    NSLog(@"pow array: %@",[sequence array]);
     
-    NSLog(@"even array: %@",[[[array rac_sequence] filter:^BOOL(id  _Nullable value) {
-        return [(NSNumber*)value integerValue] % 2 == 0;
-    }] array]);
+    RACSignal* validSignal = [[self.accountField rac_textSignal] map:^id _Nullable(NSString * _Nullable value) {
+        return @([(NSString*)value containsString:@"@"]);
+    }];
+//    RAC(self.createBtn, enabled) = validSignal;
+    self.createBtn.rac_command = [[RACCommand alloc]initWithEnabled:validSignal signalBlock:^RACSignal * _Nonnull(id  _Nullable input) {
+        NSLog(@"Create button clicked with input: %@",input);
+        return [RACSignal empty];
+    }];
     
-    NSLog(@"fold string : %@",[[[array rac_sequence] map:^id _Nullable(id  _Nullable value) {
-        return [(NSNumber*)value stringValue];
-    }] foldLeftWithStart:@"" reduce:^id _Nullable(id  _Nullable accumulator, id  _Nullable value) {
-        return [(NSString*)accumulator stringByAppendingString:(NSString*)value];
-    }]);
+    RAC(self.accountField, textColor) = [validSignal map:^id _Nullable(id  _Nullable value) {
+        if ([(NSNumber*)value boolValue]) {
+            return [UIColor greenColor];
+        }
+        else{
+            return [UIColor redColor];
+        }
+    }];
 }
-
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
-
-
 @end
