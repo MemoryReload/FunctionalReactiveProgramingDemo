@@ -10,14 +10,18 @@
 #import "FRPGalleryCollectionViewController.h"
 
 @interface AppDelegate ()
-
+@property (strong, readwrite) PXAPIHelper* apiHelper;
 @end
+
+static const NSString* key=@"ufpJVdMfdrlcerksovwxWv4RYvL2z2NGVbm9r3mI";
+static const NSString* secret=@"yQ2gyWWS6NxPLgNsVm0fGFo1rA1deGTM0SEyaRhi";
 
 @implementation AppDelegate
 
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
+    self.apiHelper = [[PXAPIHelper alloc]initWithHost:nil consumerKey:key consumerSecret:secret];
     self.window = [[UIWindow alloc]initWithFrame:[[UIScreen mainScreen] bounds]];
     self.window.rootViewController = [[UINavigationController alloc]initWithRootViewController:[[FRPGalleryCollectionViewController alloc]init]];
     self.window.backgroundColor = [UIColor whiteColor];

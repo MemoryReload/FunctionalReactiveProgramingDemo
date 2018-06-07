@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		63727E0220C988870067809D /* FRPGalleryFlowLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 63727E0120C988870067809D /* FRPGalleryFlowLayout.m */; };
+		63727E0520C992E30067809D /* FRPPhotoImporter.m in Sources */ = {isa = PBXBuildFile; fileRef = 63727E0420C992E30067809D /* FRPPhotoImporter.m */; };
+		63727E0820C996150067809D /* FRPPhotoModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 63727E0720C996150067809D /* FRPPhotoModel.m */; };
 		63BED3A420C8FBDC004872F7 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 63BED3A320C8FBDC004872F7 /* AppDelegate.m */; };
 		63BED3AC20C8FBE0004872F7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 63BED3AB20C8FBE0004872F7 /* Assets.xcassets */; };
 		63BED3AF20C8FBE0004872F7 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 63BED3AD20C8FBE0004872F7 /* LaunchScreen.storyboard */; };
@@ -19,6 +22,12 @@
 		19CD40C29F636364474C72F1 /* Pods-FunctionalReactivePixels.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FunctionalReactivePixels.release.xcconfig"; path = "Pods/Target Support Files/Pods-FunctionalReactivePixels/Pods-FunctionalReactivePixels.release.xcconfig"; sourceTree = "<group>"; };
 		1FB60764552CEB09DDBE2AF3 /* libPods-FunctionalReactivePixels.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-FunctionalReactivePixels.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		61A7F9320D2E08735A3F673D /* Pods-FunctionalReactivePixels.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FunctionalReactivePixels.debug.xcconfig"; path = "Pods/Target Support Files/Pods-FunctionalReactivePixels/Pods-FunctionalReactivePixels.debug.xcconfig"; sourceTree = "<group>"; };
+		63727E0020C988870067809D /* FRPGalleryFlowLayout.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FRPGalleryFlowLayout.h; sourceTree = "<group>"; };
+		63727E0120C988870067809D /* FRPGalleryFlowLayout.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FRPGalleryFlowLayout.m; sourceTree = "<group>"; };
+		63727E0320C992E30067809D /* FRPPhotoImporter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FRPPhotoImporter.h; sourceTree = "<group>"; };
+		63727E0420C992E30067809D /* FRPPhotoImporter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FRPPhotoImporter.m; sourceTree = "<group>"; };
+		63727E0620C996150067809D /* FRPPhotoModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FRPPhotoModel.h; sourceTree = "<group>"; };
+		63727E0720C996150067809D /* FRPPhotoModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FRPPhotoModel.m; sourceTree = "<group>"; };
 		63BED39F20C8FBDC004872F7 /* FunctionalReactivePixels.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FunctionalReactivePixels.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		63BED3A220C8FBDC004872F7 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		63BED3A320C8FBDC004872F7 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -77,6 +86,12 @@
 				63BED3A320C8FBDC004872F7 /* AppDelegate.m */,
 				63BED3B820C8FCCB004872F7 /* FRPGalleryCollectionViewController.h */,
 				63BED3B920C8FCCB004872F7 /* FRPGalleryCollectionViewController.m */,
+				63727E0020C988870067809D /* FRPGalleryFlowLayout.h */,
+				63727E0120C988870067809D /* FRPGalleryFlowLayout.m */,
+				63727E0320C992E30067809D /* FRPPhotoImporter.h */,
+				63727E0420C992E30067809D /* FRPPhotoImporter.m */,
+				63727E0620C996150067809D /* FRPPhotoModel.h */,
+				63727E0720C996150067809D /* FRPPhotoModel.m */,
 				63BED3AB20C8FBE0004872F7 /* Assets.xcassets */,
 				63BED3AD20C8FBE0004872F7 /* LaunchScreen.storyboard */,
 				63BED3B020C8FBE0004872F7 /* Info.plist */,
@@ -205,8 +220,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				63BED3B220C8FBE0004872F7 /* main.m in Sources */,
+				63727E0820C996150067809D /* FRPPhotoModel.m in Sources */,
 				63BED3BA20C8FCCB004872F7 /* FRPGalleryCollectionViewController.m in Sources */,
 				63BED3A420C8FBDC004872F7 /* AppDelegate.m in Sources */,
+				63727E0220C988870067809D /* FRPGalleryFlowLayout.m in Sources */,
+				63727E0520C992E30067809D /* FRPPhotoImporter.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

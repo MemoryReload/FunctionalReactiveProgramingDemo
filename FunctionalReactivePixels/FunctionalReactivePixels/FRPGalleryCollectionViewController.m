@@ -7,14 +7,24 @@
 //
 
 #import "FRPGalleryCollectionViewController.h"
+#import "FRPGalleryFlowLayout.h"
+#import "FRPPhotoImporter.h"
+#import "FRPPhotoModel.h"
 
 @interface FRPGalleryCollectionViewController ()
-
+@property (nonatomic,strong) NSArray<FRPPhotoModel*>* photos;
 @end
 
 @implementation FRPGalleryCollectionViewController
 
 static NSString * const reuseIdentifier = @"Cell";
+
+-(instancetype)init
+{
+    FRPGalleryFlowLayout* layout = [[FRPGalleryFlowLayout alloc]init];
+    self = [self initWithCollectionViewLayout:layout];
+    return self;
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -26,6 +36,10 @@ static NSString * const reuseIdentifier = @"Cell";
     [self.collectionView registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:reuseIdentifier];
     
     // Do any additional setup after loading the view.
+    [[FRPPhotoImporter importPhotos] subscribeNext:^(id  _Nullable x) {
+        self.photos = x;
+        [self.collectionView reloadData];
+    }];
 }
 
 - (void)didReceiveMemoryWarning {
