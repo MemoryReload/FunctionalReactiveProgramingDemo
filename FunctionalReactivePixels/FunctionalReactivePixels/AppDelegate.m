@@ -10,7 +10,8 @@
 #import "FRPGalleryCollectionViewController.h"
 
 @interface AppDelegate ()
-@property (strong, readwrite) PXAPIHelper* apiHelper;
+@property (nonatomic,strong,readwrite) PXAPIHelper* apiHelper;
+@property (nonatomic,strong) UINavigationController* navigationController;
 @end
 
 static const NSString* key=@"ufpJVdMfdrlcerksovwxWv4RYvL2z2NGVbm9r3mI";
@@ -22,13 +23,29 @@ static const NSString* secret=@"yQ2gyWWS6NxPLgNsVm0fGFo1rA1deGTM0SEyaRhi";
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
     self.apiHelper = [[PXAPIHelper alloc]initWithHost:nil consumerKey:key consumerSecret:secret];
-    self.window = [[UIWindow alloc]initWithFrame:[[UIScreen mainScreen] bounds]];
-    self.window.rootViewController = [[UINavigationController alloc]initWithRootViewController:[[FRPGalleryCollectionViewController alloc]init]];
-    self.window.backgroundColor = [UIColor whiteColor];
+    self.window.rootViewController = self.navigationController;
     [self.window makeKeyAndVisible];
+    [self.navigationController pushViewController:[[FRPGalleryCollectionViewController alloc]init] animated:YES];
     return YES;
 }
 
+- (UIWindow *)window
+{
+    if (!_window) {
+        _window = [[UIWindow alloc]initWithFrame:[[UIScreen mainScreen] bounds]];
+        _window.backgroundColor = [UIColor whiteColor];
+    }
+    return _window;
+}
+
+- (UINavigationController*)navigationController
+{
+    if (!_navigationController) {
+        _navigationController = [[UINavigationController alloc]init];
+        _navigationController.navigationBar.titleTextAttributes = @{NSForegroundColorAttributeName:[UIColor blueColor]};
+    }
+    return _navigationController;
+}
 
 - (void)applicationWillResignActive:(UIApplication *)application {
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.

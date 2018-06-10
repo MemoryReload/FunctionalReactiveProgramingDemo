@@ -12,7 +12,7 @@
 
 @property (strong, nonatomic) UIWindow *window;
 
-@property (strong, readonly) PXAPIHelper* apiHelper;
+@property (nonatomic,strong, readonly) PXAPIHelper* apiHelper;
 
 @end
 
