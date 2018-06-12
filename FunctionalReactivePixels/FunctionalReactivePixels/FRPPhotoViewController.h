@@ -8,6 +8,10 @@
 
 #import <UIKit/UIKit.h>
 
-@interface FRPPhotoViewController : UIViewController
+@class FRPPhotoModel;
 
+@interface FRPPhotoViewController : UIViewController
+@property (nonatomic,assign,readonly) NSUInteger photoIndex;
+@property (nonatomic,strong,readonly) FRPPhotoModel* model;
+-(instancetype)initWithPhotoModel:(FRPPhotoModel*)model photoIndex:(NSInteger)index;
 @end

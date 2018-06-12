@@ -12,6 +12,7 @@
 #import <ReactiveObjC/ReactiveObjC.h>
 #import <500px-iOS-api/PXAPI.h>
 #import <libextobjc/EXTScope.h>
+#import <SVProgressHUD.h>
 
 #import "AppDelegate.h"
 #define appDelegate ((AppDelegate*)[[UIApplication sharedApplication] delegate])

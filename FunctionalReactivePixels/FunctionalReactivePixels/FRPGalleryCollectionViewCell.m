@@ -38,5 +38,6 @@
 {
     [super prepareForReuse];
     [self.subscription dispose];
+    self.subscription = nil;
 }
 @end

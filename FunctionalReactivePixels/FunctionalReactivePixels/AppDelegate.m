@@ -22,7 +22,7 @@ static const NSString* secret=@"yQ2gyWWS6NxPLgNsVm0fGFo1rA1deGTM0SEyaRhi";
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
-    self.apiHelper = [[PXAPIHelper alloc]initWithHost:nil consumerKey:key consumerSecret:secret];
+    self.apiHelper = [[PXAPIHelper alloc]initWithHost:nil consumerKey:(NSString*)key consumerSecret:(NSString*)secret];
     self.window.rootViewController = self.navigationController;
     [self.window makeKeyAndVisible];
     [self.navigationController pushViewController:[[FRPGalleryCollectionViewController alloc]init] animated:YES];
@@ -42,7 +42,6 @@ static const NSString* secret=@"yQ2gyWWS6NxPLgNsVm0fGFo1rA1deGTM0SEyaRhi";
 {
     if (!_navigationController) {
         _navigationController = [[UINavigationController alloc]init];
-        _navigationController.navigationBar.titleTextAttributes = @{NSForegroundColorAttributeName:[UIColor blueColor]};
     }
     return _navigationController;
 }

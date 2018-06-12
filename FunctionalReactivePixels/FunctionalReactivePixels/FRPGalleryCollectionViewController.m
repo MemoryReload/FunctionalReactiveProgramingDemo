@@ -11,8 +11,9 @@
 #import "FRPPhotoImporter.h"
 #import "FRPPhotoModel.h"
 #import "FRPGalleryCollectionViewCell.h"
+#import "FRPFullSizedPhotoViewController.h"
 
-@interface FRPGalleryCollectionViewController ()
+@interface FRPGalleryCollectionViewController () <FRPFullSizedPhotoViewControllerDelegate>
 @property (nonatomic,strong) NSArray<FRPPhotoModel*>* photos;
 @end
 
@@ -33,7 +34,7 @@ static NSString * const reuseIdentifier = @"Cell";
     // Uncomment the following line to preserve selection between presentations
     // self.clearsSelectionOnViewWillAppear = NO;
     
-    self.title = @"Popular on 500px";
+    self.title = @"Popular";
     self.collectionView.backgroundColor = [UIColor whiteColor];
     
     // Register cell classes
@@ -51,11 +52,12 @@ static NSString * const reuseIdentifier = @"Cell";
 
 - (void)loadPopularPhotos
 {
+    [SVProgressHUD show];
     [[FRPPhotoImporter importPhotos] subscribeNext:^(id  _Nullable x) {
         self.photos = x;
-        NSLog(@"Load photos successfully!");
+        [SVProgressHUD dismiss];
     } error:^(NSError * _Nullable error) {
-        NSLog(@"Couldn't fetch photos from 500px: %@",error);
+        [SVProgressHUD showWithStatus:[NSString stringWithFormat:error.localizedDescription]];
     }];
 }
 
@@ -64,15 +66,12 @@ static NSString * const reuseIdentifier = @"Cell";
     // Dispose of any resources that can be recreated.
 }
 
-/*
-#pragma mark - Navigation
+#pragma mark <FRPFullSizedPhotoViewControllerDelegate>
 
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+-(void)userDidScroll:(FRPFullSizedPhotoViewController *)viewController toPotoIndex:(NSInteger)index
+{
+    [self.collectionView selectItemAtIndexPath:[NSIndexPath indexPathForRow:index inSection:0] animated:NO scrollPosition:UICollectionViewScrollPositionCenteredVertically];
 }
-*/
 
 #pragma mark <UICollectionViewDataSource>
 
@@ -94,19 +93,32 @@ static NSString * const reuseIdentifier = @"Cell";
 
 #pragma mark <UICollectionViewDelegate>
 
-/*
 // Uncomment this method to specify if the specified item should be highlighted during tracking
 - (BOOL)collectionView:(UICollectionView *)collectionView shouldHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
 	return YES;
 }
-*/
 
-/*
-// Uncomment this method to specify if the specified item should be selected
+-(void)collectionView:(UICollectionView *)collectionView didHighlightItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    NSLog(@">>>>>>>>>>highlight");
+}
+
+-(void)collectionView:(UICollectionView *)collectionView didUnhighlightItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    NSLog(@"<<<<<<<<<unhighlight");
+}
+
+
 - (BOOL)collectionView:(UICollectionView *)collectionView shouldSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     return YES;
 }
-*/
+
+-(void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    FRPFullSizedPhotoViewController* fullSizedVC = [[FRPFullSizedPhotoViewController alloc]initWithPhotos:self.photos currentPhotoIndex:indexPath.row];
+    fullSizedVC.delegate = self;
+    [self.navigationController pushViewController:fullSizedVC animated:YES];
+}
 
 /*
 // Uncomment these methods to specify if an action menu should be displayed for the specified item, and react to actions performed on the item
