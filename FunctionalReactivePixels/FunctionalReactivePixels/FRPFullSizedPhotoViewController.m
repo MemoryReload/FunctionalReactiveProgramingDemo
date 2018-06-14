@@ -53,7 +53,7 @@
 
 - (UIViewController*)photoViewControllerForIndex:(NSInteger)index
 {
-    if (index>=0 || index < self.photos.count) {
+    if (index>=0 && index < self.photos.count) {
         FRPPhotoModel* model = [self.photos objectAtIndex:index];
         FRPPhotoViewController* photoVC = [[FRPPhotoViewController alloc]initWithPhotoModel:model photoIndex:index];
         return photoVC;

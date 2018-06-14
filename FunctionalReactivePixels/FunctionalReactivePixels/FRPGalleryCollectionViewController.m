@@ -15,11 +15,43 @@
 
 @interface FRPGalleryCollectionViewController () <FRPFullSizedPhotoViewControllerDelegate>
 @property (nonatomic,strong) NSArray<FRPPhotoModel*>* photos;
+@property (nonatomic,strong) RACDelegateProxy* collectionViewDelegate;
+@property (nonatomic,strong) RACDelegateProxy* fullSizePhotoViewControllerDelegate;
 @end
 
 @implementation FRPGalleryCollectionViewController
 
 static NSString * const reuseIdentifier = @"Cell";
+
+-(RACDelegateProxy *)collectionViewDelegate
+{
+    if (!_collectionViewDelegate) {
+        _collectionViewDelegate = [[RACDelegateProxy alloc]initWithProtocol:@protocol(UICollectionViewDelegate)];
+        @weakify(self);
+        [[_collectionViewDelegate rac_signalForSelector:@selector(collectionView:didSelectItemAtIndexPath:)] subscribeNext:^(RACTuple * _Nullable x) {
+            @strongify(self);
+            NSIndexPath* indexPath = [x second];
+            FRPFullSizedPhotoViewController* fullSizedVC = [[FRPFullSizedPhotoViewController alloc]initWithPhotos:self.photos currentPhotoIndex:indexPath.row];
+            fullSizedVC.delegate = (id<FRPFullSizedPhotoViewControllerDelegate>)self.fullSizePhotoViewControllerDelegate;
+            [self.navigationController pushViewController:fullSizedVC animated:YES];
+        }];
+    }
+    return _collectionViewDelegate;
+}
+
+-(RACDelegateProxy *)fullSizePhotoViewControllerDelegate
+{
+    if (!_fullSizePhotoViewControllerDelegate) {
+        _fullSizePhotoViewControllerDelegate = [[RACDelegateProxy alloc]initWithProtocol:@protocol(FRPFullSizedPhotoViewControllerDelegate)];
+        @weakify(self);
+        [[_fullSizePhotoViewControllerDelegate signalForSelector:@selector(userDidScroll:toPotoIndex:)] subscribeNext:^(RACTuple * _Nullable x) {
+            @strongify(self);
+            NSInteger index = [[x second] integerValue];
+            [self.collectionView selectItemAtIndexPath:[NSIndexPath indexPathForRow:index inSection:0] animated:NO scrollPosition:UICollectionViewScrollPositionCenteredVertically];
+        }];
+    }
+    return _fullSizePhotoViewControllerDelegate;
+}
 
 -(instancetype)init
 {
@@ -39,38 +71,38 @@ static NSString * const reuseIdentifier = @"Cell";
     
     // Register cell classes
     [self.collectionView registerClass:[FRPGalleryCollectionViewCell class] forCellWithReuseIdentifier:reuseIdentifier];
+    // Set collection view delegate
+    self.collectionView.delegate = (id<UICollectionViewDelegate>)self.collectionViewDelegate;
     
     // Do any additional setup after loading the view.
-    @weakify(self);
-    [RACObserve(self, photos) subscribeNext:^(id  _Nullable x) {
-        @strongify(self);
-        [self.collectionView reloadData];
-    }];
     
-    [self loadPopularPhotos];
-}
-
-- (void)loadPopularPhotos
-{
+//        RACSignal* signal = [FRPPhotoImporter importPhotos];
+//        RACSignal* loaded = [signal catch:^RACSignal * _Nonnull(NSError * _Nonnull error) {
+//            [SVProgressHUD showErrorWithStatus:error.localizedDescription];
+//            return [RACSignal empty];
+//        }];
+//        RAC(self,self.photos) = loaded;
+//        @weakify(self);
+//        [loaded subscribeCompleted:^{
+//            @strongify(self);
+//            [SVProgressHUD dismiss];
+//            [self.collectionView reloadData];
+//        }];
+    
     [SVProgressHUD show];
-    [[FRPPhotoImporter importPhotos] subscribeNext:^(id  _Nullable x) {
-        self.photos = x;
+    @weakify(self);
+    RAC(self,self.photos) = [[[[FRPPhotoImporter importPhotos] doCompleted:^{
+        @strongify(self);
         [SVProgressHUD dismiss];
-    } error:^(NSError * _Nullable error) {
-        [SVProgressHUD showWithStatus:[NSString stringWithFormat:error.localizedDescription]];
-    }];
+        [self.collectionView reloadData];
+    }] doError:^(NSError * _Nonnull error) {
+        [SVProgressHUD showErrorWithStatus:error.localizedDescription];
+    }] catchTo:[RACSignal empty]];
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
-}
-
-#pragma mark <FRPFullSizedPhotoViewControllerDelegate>
-
--(void)userDidScroll:(FRPFullSizedPhotoViewController *)viewController toPotoIndex:(NSInteger)index
-{
-    [self.collectionView selectItemAtIndexPath:[NSIndexPath indexPathForRow:index inSection:0] animated:NO scrollPosition:UICollectionViewScrollPositionCenteredVertically];
 }
 
 #pragma mark <UICollectionViewDataSource>
@@ -87,52 +119,7 @@ static NSString * const reuseIdentifier = @"Cell";
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     FRPGalleryCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:reuseIdentifier forIndexPath:indexPath];
     // Configure the cell
-    [cell setPhotoModel:[self.photos objectAtIndex:indexPath.row]];
+    cell.model = [self.photos objectAtIndex:indexPath.row];
     return cell;
 }
-
-#pragma mark <UICollectionViewDelegate>
-
-// Uncomment this method to specify if the specified item should be highlighted during tracking
-- (BOOL)collectionView:(UICollectionView *)collectionView shouldHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
-	return YES;
-}
-
--(void)collectionView:(UICollectionView *)collectionView didHighlightItemAtIndexPath:(NSIndexPath *)indexPath
-{
-    NSLog(@">>>>>>>>>>highlight");
-}
-
--(void)collectionView:(UICollectionView *)collectionView didUnhighlightItemAtIndexPath:(NSIndexPath *)indexPath
-{
-    NSLog(@"<<<<<<<<<unhighlight");
-}
-
-
-- (BOOL)collectionView:(UICollectionView *)collectionView shouldSelectItemAtIndexPath:(NSIndexPath *)indexPath {
-    return YES;
-}
-
--(void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
-{
-    FRPFullSizedPhotoViewController* fullSizedVC = [[FRPFullSizedPhotoViewController alloc]initWithPhotos:self.photos currentPhotoIndex:indexPath.row];
-    fullSizedVC.delegate = self;
-    [self.navigationController pushViewController:fullSizedVC animated:YES];
-}
-
-/*
-// Uncomment these methods to specify if an action menu should be displayed for the specified item, and react to actions performed on the item
-- (BOOL)collectionView:(UICollectionView *)collectionView shouldShowMenuForItemAtIndexPath:(NSIndexPath *)indexPath {
-	return NO;
-}
-
-- (BOOL)collectionView:(UICollectionView *)collectionView canPerformAction:(SEL)action forItemAtIndexPath:(NSIndexPath *)indexPath withSender:(id)sender {
-	return NO;
-}
-
-- (void)collectionView:(UICollectionView *)collectionView performAction:(SEL)action forItemAtIndexPath:(NSIndexPath *)indexPath withSender:(id)sender {
-	
-}
-*/
-
 @end

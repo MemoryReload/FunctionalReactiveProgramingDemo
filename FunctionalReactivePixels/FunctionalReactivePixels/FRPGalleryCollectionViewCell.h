@@ -11,7 +11,5 @@
 @class FRPPhotoModel;
 
 @interface FRPGalleryCollectionViewCell : UICollectionViewCell
-@property (nonatomic,weak) UIImageView* imageView;
-@property (nonatomic,strong) RACDisposable* subscription;
--(void)setPhotoModel:(FRPPhotoModel*)model;
+@property (nonatomic,strong) FRPPhotoModel* model;
 @end

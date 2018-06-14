@@ -50,7 +50,7 @@
         [[FRPPhotoImporter fetchPotoDetailsWithModel:self.model] subscribeNext:^(id  _Nullable x) {
             [SVProgressHUD dismiss];
         } error:^(NSError * _Nullable error) {
-            [SVProgressHUD showWithStatus:error.localizedDescription];
+            [SVProgressHUD showErrorWithStatus:error.localizedDescription];
         }];
     }
 }

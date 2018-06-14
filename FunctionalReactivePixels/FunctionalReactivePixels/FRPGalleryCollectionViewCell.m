@@ -9,6 +9,10 @@
 #import "FRPGalleryCollectionViewCell.h"
 #import "FRPPhotoModel.h"
 
+@interface FRPGalleryCollectionViewCell ()
+@property (nonatomic,weak,readwrite) UIImageView* imageView;
+@end
+
 @implementation FRPGalleryCollectionViewCell
 -(instancetype)initWithFrame:(CGRect)frame
 {
@@ -21,23 +25,14 @@
         imgView.contentMode = UIViewContentModeScaleAspectFit;
         [self.contentView addSubview:imgView];
         self.imageView = imgView;
+        
+        RAC(self.imageView, image) = [[RACObserve(self, model.thumbnailData) filter:^BOOL(id  _Nullable value) {
+            return value != nil;
+        }] map:^id _Nullable(id  _Nullable value) {
+            return [UIImage imageWithData:value];
+        }];
     }
     return self;
 }
 
--(void)setPhotoModel:(FRPPhotoModel*)model
-{
-   self.subscription = [[[RACObserve(model, thumbnailData) filter:^BOOL(id  _Nullable value) {
-        return value != nil;
-    }] map:^id _Nullable(id  _Nullable value) {
-        return [UIImage imageWithData:value];
-    }] setKeyPath:@keypath(self.imageView, image) onObject:self.imageView];
-}
-
--(void)prepareForReuse
-{
-    [super prepareForReuse];
-    [self.subscription dispose];
-    self.subscription = nil;
-}
 @end
