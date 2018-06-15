@@ -45,14 +45,15 @@
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    if (!self.model.fullsizedData) {
-        [SVProgressHUD show];
-        [[FRPPhotoImporter fetchPotoDetailsWithModel:self.model] subscribeNext:^(id  _Nullable x) {
-            [SVProgressHUD dismiss];
-        } error:^(NSError * _Nullable error) {
-            [SVProgressHUD showErrorWithStatus:error.localizedDescription];
-        }];
+    if (self.model.fullsizedData) {
+        return;
     }
+    [SVProgressHUD show];
+    [[FRPPhotoImporter fetchPotoDetailsWithModel:self.model] subscribeNext:^(id  _Nullable x) {
+        [SVProgressHUD dismiss];
+    } error:^(NSError * _Nullable error) {
+        [SVProgressHUD showErrorWithStatus:error.localizedDescription];
+    }];
 }
 
 - (void)didReceiveMemoryWarning {

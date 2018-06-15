@@ -104,13 +104,18 @@
     }];
 }
 
-+(void)downloadWithURL:(NSURL*)url completion:(void(^)(NSData* data))completion
+//+(void)downloadWithURL:(NSURL*)url completion:(void(^)(NSData* data))completion
+//{
+//    NSURLRequest* request = [NSURLRequest requestWithURL:url];
+//    [NSURLConnection sendAsynchronousRequest:request queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse * _Nullable response, NSData * _Nullable data, NSError * _Nullable connectionError) {
+//        if (completion) {
+//            completion(data);
+//        }
+//    }];
+//}
+- (RACSignal*)downloadWithURL:(NSURL*)url
 {
     NSURLRequest* request = [NSURLRequest requestWithURL:url];
-    [NSURLConnection sendAsynchronousRequest:request queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse * _Nullable response, NSData * _Nullable data, NSError * _Nullable connectionError) {
-        if (completion) {
-            completion(data);
-        }
-    }];
+    return [NSURLConnection rac_sendAsynchronousRequest:request];
 }
 @end
